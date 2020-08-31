@@ -59,7 +59,7 @@ router.post(
       })
     } catch (err) {
       console.error(err.message)
-      return status(500).json({ errors: [{ msg: 'Erreur serveur' }] })
+      return status(500).json({ error: 'Erreur serveur' })
     }
   }
 )
