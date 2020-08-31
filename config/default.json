@@ -1,4 +1,0 @@
-{
-  "mongoURI": "mongodb+srv://admin1234:admin1234@devconnector.fcktv.gcp.mongodb.net/collections?retryWrites=true&w=majority",
-  "jwtSecret": "rTYs7pa24H0hugoScR20C9m0bJUSyNLpemV36oMxb"
-}
