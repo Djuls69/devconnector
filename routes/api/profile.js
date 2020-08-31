@@ -1,9 +1,11 @@
 const express = require('express')
 const router = express.Router()
 const auth = require('../../middlewares/auth')
+const { body, validationResult } = require('express-validator')
+const axios = require('axios')
+const config = require('config')
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
-const { body, validationResult } = require('express-validator')
 
 // @route:      GET api/profile/me
 // @desc:       Get current users profile
@@ -117,6 +119,161 @@ router.get('/user/:user_id', async (req, res) => {
       return res.status(400).json({ msg: 'Pas de profil trouvé pour cet utilisateur' })
     }
     return status(500).json({ error: 'Erreur serveur' })
+  }
+})
+
+// @route:      DELETE api/profile
+// @desc:       Delete profile, user & posts
+// @access:     Private
+router.delete('/', auth, async (req, res) => {
+  try {
+    // TODO: remove users posts
+    // Remove profile
+    await Profile.findOneAndRemove({ user: req.user.id })
+
+    // Remove user
+    await User.findOneAndRemove({ _id: req.user.id })
+
+    return res.json({ msg: 'Utilisateur supprimé' })
+  } catch (err) {
+    console.error(err.message)
+    return status(500).json({ error: 'Erreur serveur' })
+  }
+})
+
+// @route:      POST api/profile/experiences
+// @desc:       Add profile experiences
+// @access:     Private
+router.post(
+  '/experiences',
+  [
+    auth,
+    [
+      body('title', 'Requis').not().isEmpty(),
+      body('company', 'Requis').not().isEmpty(),
+      body('from', 'Requis').not().isEmpty()
+    ]
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
+    const { title, company, location, from, to, current, description } = req.body
+    const newExp = { title, company, location, from, to, current, description }
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id })
+      profile.experience.unshift(newExp)
+      await profile.save()
+      res.json(profile)
+    } catch (err) {
+      console.error(err.message)
+      return status(500).json({ error: 'Erreur serveur' })
+    }
+  }
+)
+
+// @route:      DELETE api/profile/experiences/:exp_id
+// @desc:       Delete profile experiences
+// @access:     Private
+router.delete('/experiences/:exp_id', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id })
+
+    // Get remove index
+    const removeIndex = profile.experience.filter(exp => exp.id === req.params.exp_id)
+    profile.experience.splice(removeIndex, 1)
+
+    await profile.save()
+    res.json(profile)
+  } catch (err) {
+    console.error(err.message)
+    return status(500).json({ error: 'Erreur serveur' })
+  }
+})
+
+// @route:      POST api/profile/education
+// @desc:       Add profile education
+// @access:     Private
+router.post(
+  '/education',
+  [
+    auth,
+    [
+      body('school', 'Requis').not().isEmpty(),
+      body('degree', 'Requis').not().isEmpty(),
+      body('fieldOfStudy', 'Requis').not().isEmpty(),
+      body('from', 'Requis').not().isEmpty()
+    ]
+  ],
+  async (req, res) => {
+    const errors = validationResult(req)
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() })
+    }
+
+    const { school, degree, fieldOfStudy, from, to, current, description } = req.body
+    const newEdu = { school, degree, fieldOfStudy, from, to, current, description }
+
+    try {
+      const profile = await Profile.findOne({ user: req.user.id })
+      profile.education.unshift(newEdu)
+      await profile.save()
+      res.json(profile)
+    } catch (err) {
+      console.error(err.message)
+      return status(500).json({ error: 'Erreur serveur' })
+    }
+  }
+)
+
+// @route:      DELETE api/profile/education/:edu_id
+// @desc:       Delete profile education
+// @access:     Private
+router.delete('/education/:edu_id', auth, async (req, res) => {
+  try {
+    const profile = await Profile.findOne({ user: req.user.id })
+
+    // Get remove index
+    const removeIndex = profile.education.filter(edu => edu.id === req.params.edu_id)
+    profile.education.splice(removeIndex, 1)
+
+    await profile.save()
+    res.json(profile)
+  } catch (err) {
+    console.error(err.message)
+    return status(500).json({ error: 'Erreur serveur' })
+  }
+})
+
+// @route:      GET api/profile/github/:username
+// @desc:       Get github repos
+// @access:     Public
+router.get('/github/:username', async (req, res) => {
+  try {
+    const options = {
+      url: `https://api.github.com/users/${
+        req.params.username
+      }/repos?per_page=5&sort=created:asc&client_id=${config.get('githubClientId')}&client_secret=${config.get(
+        'githubSecret'
+      )}`,
+      method: 'get',
+      headers: { 'user-agent': 'node.js' }
+    }
+
+    const response = await axios(options)
+    if (response.status !== 200) {
+      return res.status(404).json({ msg: 'Impossible de trouver cet utilisateur Github' })
+    }
+    res.json(response.data)
+  } catch (err) {
+    console.error(err.message)
+    if (res.status(404)) {
+      return res.status(404).json({ msg: 'Impossible de trouver cet utilisateur Github' })
+    }
+    return res.status(500).json({ error: 'Erreur serveur' })
   }
 })
 
