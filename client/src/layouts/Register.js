@@ -2,13 +2,15 @@ import React, { Fragment, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { setAlert } from '../redux/actions/alertActions'
+import { register } from '../redux/actions/authActions'
 import PropTypes from 'prop-types'
 
 const mapDispatch = {
-  setAlert
+  setAlert,
+  register
 }
 
-const Register = ({ setAlert }) => {
+const Register = ({ setAlert, register }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -24,9 +26,9 @@ const Register = ({ setAlert }) => {
   const handleSubmit = async e => {
     e.preventDefault()
     if (password2 !== password) {
-      setAlert('Les mots de passe ne correspondent pas', 'danger')
+      setAlert('Les mots de passe ne correspondent pas', 'danger', 3000)
     } else {
-      setAlert('Success', 'success')
+      register({ name, email, password })
     }
   }
   return (
@@ -37,7 +39,7 @@ const Register = ({ setAlert }) => {
       </p>
       <form className='form' onSubmit={handleSubmit}>
         <div className='form-group'>
-          <input type='text' placeholder='Nom' name='name' value={name} onChange={handleChange} required />
+          <input type='text' placeholder='Nom' name='name' value={name} onChange={handleChange} />
         </div>
         <div className='form-group'>
           <input type='email' placeholder='Email' name='email' value={email} onChange={handleChange} />
@@ -76,7 +78,8 @@ const Register = ({ setAlert }) => {
 }
 
 Register.propTypes = {
-  setAlert: PropTypes.func.isRequired
+  setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired
 }
 
 export default connect(null, mapDispatch)(Register)
