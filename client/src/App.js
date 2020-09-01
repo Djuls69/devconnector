@@ -5,6 +5,7 @@ import Landing from './layouts/Landing'
 import './App.css'
 import Login from './layouts/Login'
 import Register from './layouts/Register'
+import Alert from './components/Alert'
 
 const App = () => {
   return (
@@ -12,6 +13,7 @@ const App = () => {
       <Navbar />
       <Route exact path='/' component={Landing} />
       <div className='container'>
+        <Alert />
         <Switch>
           <Route exact path='/login' component={Login} />
           <Route exact path='/register' component={Register} />
