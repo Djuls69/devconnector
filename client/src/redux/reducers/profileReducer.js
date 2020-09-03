@@ -1,4 +1,12 @@
-import { GET_PROFILE, PROFILE_ERROR, CLEAR_PROFILE, UPDATE_PROFILE } from '../types'
+import {
+  GET_PROFILE,
+  GET_PROFILE_BY_ID,
+  GET_ALL_PROFILES,
+  GET_REPOS,
+  PROFILE_ERROR,
+  CLEAR_PROFILE,
+  UPDATE_PROFILE
+} from '../types'
 
 const INIT_STATE = {
   profile: null,
@@ -13,10 +21,23 @@ const profileReducer = (state = INIT_STATE, action) => {
 
   switch (type) {
     case GET_PROFILE:
+    case GET_PROFILE_BY_ID:
     case UPDATE_PROFILE:
       return {
         ...state,
         profile: payload,
+        loading: false
+      }
+    case GET_ALL_PROFILES:
+      return {
+        ...state,
+        profiles: payload,
+        loading: false
+      }
+    case GET_REPOS:
+      return {
+        ...state,
+        repos: payload,
         loading: false
       }
     case PROFILE_ERROR:
