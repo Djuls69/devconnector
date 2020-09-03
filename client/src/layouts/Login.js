@@ -37,7 +37,7 @@ const Login = ({ login, isAuthenticated }) => {
     <Fragment>
       <h1 className='large text-primary'>Se connecter</h1>
       <p className='lead'>
-        <i className='fas fa-user'></i> Créez votre compte
+        <i className='fas fa-user'></i> Connectez-vous à votre compte
       </p>
       <form className='form' onSubmit={handleSubmit}>
         <div className='form-group'>

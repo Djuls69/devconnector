@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { getCurrentProfile } from '../redux/actions/profileActions'
 import Spinner from '../components/Spinner'
+import DashboardActions from '../components/DashboardActions'
 
 const mapState = state => ({
   profile: state.profile,
@@ -27,7 +28,9 @@ const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { u
         <i className='fas fa-user'></i> Bienvenue {user && user.name}
       </p>
       {profile !== null ? (
-        <Fragment>Profil</Fragment>
+        <Fragment>
+          <DashboardActions />
+        </Fragment>
       ) : (
         <Fragment>
           <p>Merci de mettre à jour votre profil.</p>
