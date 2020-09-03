@@ -18,8 +18,7 @@ const mapDispatch = { getCurrentProfile, deleteAccount }
 const Dashboard = ({ getCurrentProfile, deleteAccount, profile: { profile, loading }, auth: { user } }) => {
   useEffect(() => {
     getCurrentProfile()
-    // eslint-disable-next-line
-  }, [])
+  }, [getCurrentProfile])
 
   return loading && profile === null ? (
     <Spinner />

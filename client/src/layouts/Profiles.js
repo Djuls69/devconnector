@@ -12,8 +12,7 @@ const mapState = state => ({
 const Profiles = ({ getAllProfiles, profile: { profiles, loading } }) => {
   useEffect(() => {
     getAllProfiles()
-    // eslint-disable-next-line
-  }, [])
+  }, [getAllProfiles])
 
   return loading ? (
     <Spinner />
