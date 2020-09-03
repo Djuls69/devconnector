@@ -2,18 +2,20 @@ import React, { useEffect, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { getCurrentProfile } from '../redux/actions/profileActions'
+import { getCurrentProfile, deleteAccount } from '../redux/actions/profileActions'
 import Spinner from '../components/Spinner'
 import DashboardActions from '../components/DashboardActions'
+import Experience from '../components/Experience'
+import Education from '../components/Education'
 
 const mapState = state => ({
   profile: state.profile,
   auth: state.auth
 })
 
-const mapDispatch = { getCurrentProfile }
+const mapDispatch = { getCurrentProfile, deleteAccount }
 
-const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { user } }) => {
+const Dashboard = ({ getCurrentProfile, deleteAccount, profile: { profile, loading }, auth: { user } }) => {
   useEffect(() => {
     getCurrentProfile()
     // eslint-disable-next-line
@@ -30,6 +32,13 @@ const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { u
       {profile !== null ? (
         <Fragment>
           <DashboardActions />
+          <Experience experience={profile.experience} />
+          <Education education={profile.education} />
+          <div className='my-2'>
+            <button onClick={deleteAccount} className='btn btn-danger'>
+              <i className='fas fa-user-minus'></i> Supprimer mon compte
+            </button>
+          </div>
         </Fragment>
       ) : (
         <Fragment>
@@ -46,7 +55,8 @@ const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { u
 Dashboard.propTypes = {
   getCurrentProfile: PropTypes.func.isRequired,
   profile: PropTypes.object.isRequired,
-  auth: PropTypes.object.isRequired
+  auth: PropTypes.object.isRequired,
+  deleteAccount: PropTypes.func.isRequired
 }
 
 export default connect(mapState, mapDispatch)(Dashboard)
