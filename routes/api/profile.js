@@ -4,6 +4,7 @@ const auth = require('../../middlewares/auth')
 const { body, validationResult } = require('express-validator')
 const axios = require('axios')
 const config = require('config')
+const normalize = require('normalize-url')
 const Profile = require('../../models/Profile')
 const User = require('../../models/User')
 const Post = require('../../models/Post')
@@ -52,16 +53,16 @@ router.post(
       instagram,
       linkedin
     } = req.body
-    const profileFields = {}
-    profileFields.user = req.user.id
-    if (company) profileFields.company = company
-    if (website) profileFields.website = website
-    if (location) profileFields.location = location
-    if (bio) profileFields.bio = bio
-    if (status) profileFields.status = status
-    if (githubUsername) profileFields.githubUsername = githubUsername
-    if (skills) {
-      profileFields.skills = skills.split(',').map(skill => skill.trim())
+
+    const profileFields = {
+      user: req.user.id,
+      company,
+      location,
+      website: website && website !== '' ? normalize(website, { forceHttps: true }) : '',
+      bio,
+      skills: Array.isArray(skills) ? skills : skills.split(',').map(skill => ' ' + skill.trim()),
+      status,
+      githubUsername
     }
 
     // Build social object
