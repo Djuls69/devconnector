@@ -1,4 +1,4 @@
-import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST } from '../types'
+import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST, GET_POST } from '../types'
 
 const INIT_STATE = {
   posts: [],
@@ -15,6 +15,12 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         posts: payload,
+        loading: false
+      }
+    case GET_POST:
+      return {
+        ...state,
+        post: payload,
         loading: false
       }
     case POST_ERROR:
