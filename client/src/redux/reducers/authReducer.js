@@ -41,6 +41,7 @@ export default (state = INIT_STATE, action) => {
     case AUTH_ERROR:
     case LOGOUT:
     case ACCOUNT_DELETED:
+      localStorage.removeItem('token')
       return {
         ...state,
         token: null,

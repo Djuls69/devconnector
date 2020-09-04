@@ -11,6 +11,10 @@ const mapState = state => ({
 const mapDispatch = { logout }
 
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
+  const handleClick = e => {
+    e.preventDefault()
+    logout()
+  }
   const authLinks = (
     <ul>
       <li>
@@ -25,7 +29,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
         </Link>
       </li>
       <li>
-        <Link to='#!' onClick={logout}>
+        <Link to='#!' onClick={handleClick}>
           <i className='fas fa-sign-out-alt'></i> <span className='hide-sm'>Logout</span>
         </Link>
       </li>
