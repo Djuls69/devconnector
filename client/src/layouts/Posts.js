@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Spinner from '../components/Spinner'
 import { getPosts } from '../redux/actions/postActions'
 import PostItem from '../components/PostItem'
+import PostForm from './PostForm'
 
 const mapState = state => ({
   post: state.post
@@ -22,7 +23,7 @@ const Posts = ({ getPosts, post: { posts, loading } }) => {
       <p className='lead'>
         <i className='fas fa-user' /> Bienvenue chez les dévs !
       </p>
-      {/* Post Form */}
+      <PostForm />
       {posts.map(post => (
         <PostItem key={post._id} post={post} />
       ))}
