@@ -151,6 +151,10 @@ router.post('/comment/:id', [auth, [body('text', 'Le message est requis').not().
     const user = await User.findById(req.user.id).select('-password')
     const post = await Post.findById(req.params.id)
 
+    if (!post) {
+      return res.status(404).json({ error: 'Post introuvable.' })
+    }
+
     const newComment = {
       text: req.body.text,
       name: user.name,

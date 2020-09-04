@@ -5,6 +5,8 @@ import { getPost } from '../redux/actions/postActions'
 import { Link } from 'react-router-dom'
 import PostItem from '../components/PostItem'
 import Spinner from '../components/Spinner'
+import CommentForm from '../components/CommentForm'
+import CommentItem from '../components/CommentItem'
 
 const mapState = state => ({
   post: state.post
@@ -20,6 +22,12 @@ const Post = ({ match, post: { post, loading }, getPost }) => {
   ) : (
     <Fragment>
       <PostItem post={post} />
+      <CommentForm postId={post._id} />
+      <div className='comments'>
+        {post.comments.map(comment => (
+          <CommentItem key={comment._id} comment={comment} postId={post._id} />
+        ))}
+      </div>
       <Link to='/posts' className='btn btn-light'>
         Retour aux posts
       </Link>

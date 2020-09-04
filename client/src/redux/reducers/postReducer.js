@@ -1,4 +1,13 @@
-import { GET_POSTS, POST_ERROR, UPDATE_LIKES, DELETE_POST, ADD_POST, GET_POST } from '../types'
+import {
+  GET_POSTS,
+  POST_ERROR,
+  UPDATE_LIKES,
+  DELETE_POST,
+  ADD_POST,
+  GET_POST,
+  ADD_COMMENT,
+  REMOVE_COMMENT
+} from '../types'
 
 const INIT_STATE = {
   posts: [],
@@ -45,6 +54,18 @@ export default (state = INIT_STATE, action) => {
       return {
         ...state,
         posts: [payload, ...state.posts],
+        loading: false
+      }
+    case ADD_COMMENT:
+      return {
+        ...state,
+        post: { ...state.post, comments: payload },
+        loading: false
+      }
+    case REMOVE_COMMENT:
+      return {
+        ...state,
+        post: { ...state.post, comments: state.post.comments.filter(comment => comment._id !== payload) },
         loading: false
       }
     default:
