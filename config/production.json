@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb+srv://admin1234:admin1234@devconnector.fcktv.gcp.mongodb.net/collections?retryWrites=true&w=majority",
+  "jwtSecret": "rTYs7pa24H0hugoScR20C9m0bJUSyNLpemV36oMb",
+  "githubClientId": "4b6b42c1c52bafa4dafc",
+  "githubSecret": "746e2d7aa468f8650f3725245ccb58ca3910a148"
+}
